@@ -2,32 +2,45 @@ let inputRegex = /(\d*\.?\d*\/?\d*\.?\d*)([A-Za-z]*)/;
 
 function ConvertHandler() {
   this.getNum = function(input) {
+    console.log('input:', input);
     let result;
     let match = input.match(/[.\/\d]+/);
+
+    // Adicionado: verificar se o input é uma string vazia ou apenas contém espaços
+    if (!input || !input.trim()) {
+      return 'invalid number';
+    }
 
     if (!match) {
       result = 1;
     } else {
       result = match[0];
       if ((result.match(/\//g) || []).length > 1) {
+        console.log('More than one slash detected:', result);
         return 'invalid number';
       }
 
       if (result.includes("/")) {
         let values = result.split("/");
-        if (values.length != 2 || isNaN(values[0]) || isNaN(values[1])){
+        if (values.length != 2 || isNaN(values[0]) || isNaN(values[1]) || parseFloat(values[0]) == 0 || parseFloat(values[1]) == 0){
+          console.log('Invalid fraction detected:', values);
           return 'invalid number';
         }
         result = parseFloat(values[0])/parseFloat(values[1]);
       } else {
+        if (isNaN(result) || result == 0) {
+          return 'invalid number';
+        }
         result = parseFloat(result);
       }    
     }
 
     if(isNaN(result) || !isFinite(result)){
+      console.log('Invalid number detected:', result);
       return 'invalid number';
     }
 
+    console.log('Resulting number:', result);
     return result;
   };
       

@@ -41,9 +41,25 @@
             type: "get",
             data: $("#convertForm").serialize(),
             success: function(data) {
-              $("#result").text(data.string || data);
-              $("#jsonResult").css('visibility', 'visible')
+              console.log("Received data:", data);
+              
+              // Se data é um objeto e tem a propriedade 'string', use-a. 
+              // Caso contrário, verifique se é um objeto com a propriedade 'error', 
+              // se for, use-a. Se não for nenhuma dessas condições, simplesmente imprima o dado recebido.
+              if (typeof data === 'object' && data.hasOwnProperty('string')) {
+                $("#result").text(data.string);
+              } else if (typeof data === 'object' && data.hasOwnProperty('error')) {
+                $("#result").text(data.error);
+              } else {
+                $("#result").text(data);
+              }
+              
+              $("#jsonResult").css('visibility', 'visible');
               $("#jsonResult").text(JSON.stringify(data));
+              
+              // Log the contents of #result and #jsonResult
+              console.log('Result:', $('#result').text());
+              console.log('JSON Result:', $('#jsonResult').text());
             }
           });
         });
